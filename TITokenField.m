@@ -318,7 +318,7 @@
 				__block BOOL shouldAdd = ![resultsArray containsObject:sourceObject];
 				if (shouldAdd && !showAlreadyTokenized){
 					
-					[tokenField.tokens enumerateObjectsUsingBlock:^(TIToken * token, NSUInteger idx, BOOL *secondStop){
+					[tokenField.tokens enumerateObjectsUsingBlock:^(TIToken * token, NSUInteger idx2, BOOL *secondStop){
 						if ([token.representedObject isEqual:sourceObject]){
 							shouldAdd = NO;
 							*secondStop = YES;
