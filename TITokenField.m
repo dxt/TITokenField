@@ -445,7 +445,9 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 - (void)setFrame:(CGRect)frame {
 	[super setFrame:frame];
 	[self.layer setShadowPath:[[UIBezierPath bezierPathWithRect:self.bounds] CGPath]];
-	[self layoutTokensAnimated:NO];
+    if(self.font){
+        [self layoutTokensAnimated:NO];
+    }
 }
 
 - (void)setText:(NSString *)text {
