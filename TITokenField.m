@@ -392,6 +392,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @synthesize numberOfLines;
 @synthesize selectedToken;
 @synthesize tokenizingCharacters;
+@synthesize oneTokenMaximum;
 
 #pragma mark Init
 - (id)initWithFrame:(CGRect)frame {
@@ -497,7 +498,15 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)didBeginEditing {
-	[tokens enumerateObjectsUsingBlock:^(TIToken * token, NSUInteger idx, BOOL *stop){[self addToken:token];}];
+    if(removesTokensOnEndEditing){
+        [tokens enumerateObjectsUsingBlock:^(TIToken * token, NSUInteger idx, BOOL *stop){[self addToken:token];}];
+    }else{
+        if(!self.oneTokenMaximum || ![tokens count]){
+            [self setText:kTextEmpty];
+        }else{
+            [self selectToken:tokens[0]];
+        }
+    }
 }
 
 - (void)didEndEditing {
@@ -549,7 +558,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
 	
-	if (selectedToken && touch.view == self) [self deselectSelectedToken];
+	if (!self.oneTokenMaximum && selectedToken && touch.view == self) [self deselectSelectedToken];
 	return [super beginTrackingWithTouch:touch withEvent:event];
 }
 
@@ -592,6 +601,10 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		
 		[self setResultsModeEnabled:NO];
 		[self deselectSelectedToken];
+        
+        if(self.oneTokenMaximum){
+            [self selectToken:token];
+        }
 	}
 }
 
