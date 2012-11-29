@@ -430,7 +430,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	[self.layer setShadowRadius:12];
 	
 	[self setPromptText:@"To:"];
-	[self setText:kTextEmpty];
+//	[self setText:kTextEmpty];
 	
 	internalDelegate = [[TITokenFieldInternalDelegate alloc] init];
 	[internalDelegate setTokenField:self];
@@ -452,7 +452,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)setText:(NSString *)text {
-	[super setText:(text.length == 0 ? kTextEmpty : text)];
+	[super setText:(text.length == 0 && self.editing ? kTextEmpty : text)];
 }
 
 - (void)setFont:(UIFont *)font {
@@ -541,6 +541,10 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	}
 	
 	[self setResultsModeEnabled:NO];
+    
+    if(!tokens.count){
+        [self setText:nil];
+    }
 }
 
 - (void)didChangeText {
