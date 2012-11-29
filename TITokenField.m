@@ -585,7 +585,15 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 - (void)addToken:(TIToken *)token {
 	
 	BOOL shouldAdd = YES;
-	if ([delegate respondsToSelector:@selector(tokenField:willAddToken:)]){
+    
+    if(self.preventDuplicates){
+        if([self.tokenTitles containsObject:token.title]){
+            self.text = kTextEmpty;
+            shouldAdd = NO;
+        }
+    }
+    
+	if (shouldAdd && [delegate respondsToSelector:@selector(tokenField:willAddToken:)]){
 		shouldAdd = [delegate tokenField:self willAddToken:token];
 	}
 	

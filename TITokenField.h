@@ -124,6 +124,7 @@ typedef enum {
 @property (nonatomic, readonly) int numberOfLines;
 @property (nonatomic, retain) NSCharacterSet * tokenizingCharacters;
 @property (nonatomic, assign) BOOL oneTokenMaximum;
+@property (nonatomic, assign) BOOL preventDuplicates;
 
 - (void)addToken:(TIToken *)title;
 - (TIToken *)addTokenWithTitle:(NSString *)title;
