@@ -567,6 +567,22 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	return [super beginTrackingWithTouch:touch withEvent:event];
 }
 
+- (void)cut:(id)sender{
+    [super cut:sender];
+    NSString *string = [UIPasteboard generalPasteboard].string;
+    if([string length] > 1 && [string characterAtIndex:0] == [kTextEmpty characterAtIndex:0]){
+        [UIPasteboard generalPasteboard].string = [string substringFromIndex:1];
+    }
+}
+
+- (void)copy:(id)sender{
+    [super copy:sender];
+    NSString *string = [UIPasteboard generalPasteboard].string;
+    if([string length] > 1 && [string characterAtIndex:0] == [kTextEmpty characterAtIndex:0]){
+        [UIPasteboard generalPasteboard].string = [string substringFromIndex:1];
+    }
+}
+
 #pragma mark Token Handling
 - (TIToken *)addTokenWithTitle:(NSString *)title {
 	return [self addTokenWithTitle:title representedObject:nil];
