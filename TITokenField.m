@@ -528,7 +528,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 			[tokens enumerateObjectsUsingBlock:^(TIToken * token, NSUInteger idx, BOOL *stop){[titles addObject:token.title];}];
 			
 			untokenized = [self.tokenTitles componentsJoinedByString:@", "];
-			CGSize untokSize = [untokenized sizeWithFont:[UIFont systemFontOfSize:14]];
+            CGSize untokSize = [untokenized sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]}];
 			CGFloat availableWidth = self.bounds.size.width - self.leftView.bounds.size.width - self.rightView.bounds.size.width;
 			
 			if (tokens.count > 1 && untokSize.width > availableWidth){
