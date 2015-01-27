@@ -1110,7 +1110,14 @@ CGPathRef CGPathCreateDisclosureIndicatorPath(CGPoint arrowPointFront, CGFloat h
 		accessoryWidth += floorf(hTextPadding / 2);
 	}
 	
-	CGSize titleSize = [title sizeWithFont:font forWidth:(maxWidth - hTextPadding - accessoryWidth) lineBreakMode:kLineBreakMode];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineBreakMode = kLineBreakMode;
+    CGRect titleRect = [title boundingRectWithSize:CGSizeMake(maxWidth - hTextPadding - accessoryWidth, MAXFLOAT)
+                                           options:NSStringDrawingUsesLineFragmentOrigin
+                                        attributes:@{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle}
+                                           context:nil];
+    [paragraphStyle release];
+    CGSize titleSize = CGSizeMake(ceilf(titleRect.size.width), ceilf(titleRect.size.height));
 	CGFloat height = floorf(titleSize.height + vTextPadding);
 	
 	[self setFrame:((CGRect){self.frame.origin, {MAX(floorf(titleSize.width + hTextPadding + accessoryWidth), height - 3), height}})];
@@ -1220,13 +1227,20 @@ CGPathRef CGPathCreateDisclosureIndicatorPath(CGPoint arrowPointFront, CGFloat h
 	
 	CGColorSpaceRelease(colorspace);
 	
-	CGSize titleSize = [title sizeWithFont:font forWidth:(maxWidth - hTextPadding - accessoryWidth) lineBreakMode:kLineBreakMode];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineBreakMode = kLineBreakMode;
+    CGRect titleRect = [title boundingRectWithSize:CGSizeMake(maxWidth - hTextPadding - accessoryWidth, MAXFLOAT)
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:@{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle}
+                                              context:nil];
+    CGSize titleSize = CGSizeMake(ceilf(titleRect.size.width), ceilf(titleRect.size.height));
 	CGFloat vPadding = floor((self.bounds.size.height - titleSize.height) / 2);
 	CGFloat titleWidth = ceilf(self.bounds.size.width - hTextPadding - accessoryWidth);
 	CGRect textBounds = CGRectMake(floorf(hTextPadding / 2), vPadding - 1, titleWidth, floorf(self.bounds.size.height - (vPadding * 2)));
 	
 	CGContextSetFillColor(context, (drawHighlighted ? (CGFloat[4]){1, 1, 1, 1} : (CGFloat[4]){0, 0, 0, 1}));
-	[title drawInRect:textBounds withFont:font lineBreakMode:kLineBreakMode];
+    [title drawInRect:textBounds withAttributes:@{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle}];
+    [paragraphStyle release];
 }
 
 CGPathRef CGPathCreateTokenPath(CGSize size, BOOL innerPath) {
