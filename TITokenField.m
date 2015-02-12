@@ -376,6 +376,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @property (nonatomic, readonly) CGFloat leftViewWidth;
 @property (nonatomic, readonly) CGFloat rightViewWidth;
 @property (nonatomic, readonly) UIScrollView * scrollView;
+@property (nonatomic) BOOL isEndingEditing;
 @end
 
 @interface TITokenField (Private)
@@ -511,7 +512,8 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)didEndEditing {
-	
+    self.isEndingEditing = YES;
+    
 	[selectedToken setSelected:NO];
 	selectedToken = nil;
 	
@@ -546,6 +548,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
     if(!tokens.count){
         [self setText:nil];
     }
+    self.isEndingEditing = NO;
 }
 
 - (void)didChangeText {
@@ -616,8 +619,9 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	
 	if (shouldAdd){
 		
-		[self becomeFirstResponder];
-		
+        if(!self.isEndingEditing){
+            [self becomeFirstResponder];
+        }
 		[token addTarget:self action:@selector(tokenTouchDown:) forControlEvents:UIControlEventTouchDown];
 		[token addTarget:self action:@selector(tokenTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:token];
@@ -631,7 +635,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		[self setResultsModeEnabled:NO];
 		[self deselectSelectedToken];
         
-        if(self.oneTokenMaximum){
+        if(self.oneTokenMaximum && !self.isEndingEditing){
             [self selectToken:token];
         }
 	}
@@ -677,7 +681,9 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	selectedToken = token;
 	[selectedToken setSelected:YES];
 	
-	[self becomeFirstResponder];
+    if(!self.isEndingEditing){
+        [self becomeFirstResponder];
+    }
 	[self setText:kTextHidden];
 }
 
