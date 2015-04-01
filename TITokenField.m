@@ -730,7 +730,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	CGFloat lineHeight = self.font.lineHeight + topMargin + 5;
 	
 	numberOfLines = 1;
-	tokenCaret = (CGPoint){leftMargin, (topMargin - 1)};
+	tokenCaret = (CGPoint){leftMargin, topMargin};
 	
 	[tokens enumerateObjectsUsingBlock:^(TIToken * token, NSUInteger idx, BOOL *stop){
 		
@@ -762,18 +762,20 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 #pragma mark View Handlers
 - (void)layoutTokensAnimated:(BOOL)animated {
 	
-	CGFloat newHeight = [self layoutTokensInternal];
-	if (self.bounds.size.height != newHeight){
-		
-		// Animating this seems to invoke the triple-tap-delete-key-loop-problem-thing™
-		[UIView animateWithDuration:(animated ? 0.3 : 0) animations:^{
-			[self setFrame:((CGRect){self.frame.origin, {self.bounds.size.width, newHeight}})];
-			[self sendActionsForControlEvents:TITokenFieldControlEventFrameWillChange];
-			
-		} completion:^(BOOL complete){
-			if (complete) [self sendActionsForControlEvents:TITokenFieldControlEventFrameDidChange];
-		}];
-	}
+	CGFloat newHeight = ceil([self layoutTokensInternal]);
+    if(newHeight < self.minimumHeight){
+        newHeight = self.minimumHeight;
+    }
+	if (self.bounds.size.height != newHeight && !self.oneTokenMaximum){
+        // Animating this seems to invoke the triple-tap-delete-key-loop-problem-thing™
+        [UIView animateWithDuration:(animated ? 0.3 : 0) animations:^{
+            [self setFrame:((CGRect){self.frame.origin, {self.bounds.size.width, newHeight}})];
+            [self sendActionsForControlEvents:TITokenFieldControlEventFrameWillChange];
+            
+        } completion:^(BOOL complete){
+            if (complete) [self sendActionsForControlEvents:TITokenFieldControlEventFrameDidChange];
+        }];
+    }
 }
 
 - (void)setResultsModeEnabled:(BOOL)flag {
@@ -847,12 +849,12 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (CGRect)leftViewRectForBounds:(CGRect)bounds {
-	return ((CGRect){{8, ceilf(self.font.lineHeight * 4 / 7)}, self.leftView.bounds.size});
+	return ((CGRect){{8, ceilf(self.font.lineHeight * 4 / 7)+1}, self.leftView.bounds.size});
 }
 
 - (CGRect)rightViewRectForBounds:(CGRect)bounds {
-	return ((CGRect){{bounds.size.width - self.rightView.bounds.size.width - 6,
-		bounds.size.height - self.rightView.bounds.size.height - 6}, self.rightView.bounds.size});
+    CGRect rect = [super rightViewRectForBounds:bounds];
+    return CGRectOffset(rect, -6, 0);
 }
 
 - (CGFloat)leftViewWidth {
@@ -865,11 +867,6 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (CGFloat)rightViewWidth {
-	
-	if (self.rightViewMode == UITextFieldViewModeNever ||
-		(self.rightViewMode == UITextFieldViewModeUnlessEditing && self.editing) ||
-		(self.rightViewMode == UITextFieldViewModeWhileEditing && !self.editing)) return 0;
-	
 	return self.rightView.bounds.size.width;
 }
 

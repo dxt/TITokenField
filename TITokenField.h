@@ -125,6 +125,7 @@ typedef enum {
 @property (nonatomic, retain) NSCharacterSet * tokenizingCharacters;
 @property (nonatomic, assign) BOOL oneTokenMaximum;
 @property (nonatomic, assign) BOOL preventDuplicates;
+@property (nonatomic, assign) CGFloat minimumHeight;
 
 - (void)addToken:(TIToken *)title;
 - (TIToken *)addTokenWithTitle:(NSString *)title;
