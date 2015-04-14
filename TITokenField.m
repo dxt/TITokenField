@@ -811,6 +811,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		if (!label || ![label isKindOfClass:[UILabel class]]){
 			label = [[UILabel alloc] initWithFrame:CGRectZero];
 			[label setTextColor:[UIColor colorWithWhite:0.5 alpha:1]];
+            [label setLineBreakMode:NSLineBreakByTruncatingMiddle];
 			[self setLeftView:label];
 			[label release];
 			
@@ -820,6 +821,11 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		[label setText:text];
 		[label setFont:[UIFont systemFontOfSize:(self.font.pointSize + 1)]];
 		[label sizeToFit];
+        if(CGRectGetWidth(label.frame) > 155){
+            CGRect frame = label.frame;
+            frame.size.width = 155;
+            label.frame = frame;
+        }
 	}
 	else
 	{
