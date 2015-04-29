@@ -143,6 +143,7 @@ typedef enum {
 
 // Pass nil to hide label
 - (void)setPromptText:(NSString *)aText;
+- (void)setPromptTextMaxWidth:(CGFloat)maxWidth;
 
 @end
 

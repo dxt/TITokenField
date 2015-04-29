@@ -377,6 +377,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @property (nonatomic, readonly) CGFloat rightViewWidth;
 @property (nonatomic, readonly) UIScrollView * scrollView;
 @property (nonatomic) BOOL isEndingEditing;
+@property (nonatomic) CGFloat promptTextMaximumWidth;
 @end
 
 @interface TITokenField (Private)
@@ -821,9 +822,12 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		[label setText:text];
 		[label setFont:[UIFont systemFontOfSize:(self.font.pointSize + 1)]];
 		[label sizeToFit];
-        if(CGRectGetWidth(label.frame) > 155){
+        
+        if(self.promptTextMaximumWidth > 0 && CGRectGetWidth(label.frame) > self.promptTextMaximumWidth){
             CGRect frame = label.frame;
-            frame.size.width = 155;
+            frame.size.width = self.promptTextMaximumWidth;
+            CGRect textRect = [label textRectForBounds:frame limitedToNumberOfLines:1];
+            frame.size.width = textRect.size.width;
             label.frame = frame;
         }
 	}
@@ -833,6 +837,15 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	}
 	
 	[self layoutTokensAnimated:YES];
+}
+
+- (void)setPromptTextMaxWidth:(CGFloat)maxWidth{
+    if(maxWidth != self.promptTextMaximumWidth){
+        self.promptTextMaximumWidth = maxWidth;
+        if([self.leftView isKindOfClass:[UILabel class]]){
+            [self setPromptText:((UILabel *)self.leftView).text];
+        }
+    }
 }
 
 #pragma mark Layout
