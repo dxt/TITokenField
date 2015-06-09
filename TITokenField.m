@@ -740,7 +740,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		
 		if (token.superview){
 			
-			if (tokenCaret.x + token.bounds.size.width + rightMargin > self.bounds.size.width){
+			if (tokenCaret.x + token.bounds.size.width + rightMargin > self.bounds.size.width && !self.oneTokenMaximum){
 				numberOfLines++;
 				tokenCaret.x = (numberOfLines > 1 ? hPadding : leftMargin);
 				tokenCaret.y += lineHeight;
