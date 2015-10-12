@@ -88,7 +88,7 @@
 		UITableViewController * tableViewController = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
 		[tableViewController.tableView setDelegate:self];
 		[tableViewController.tableView setDataSource:self];
-		[tableViewController setContentSizeForViewInPopover:CGSizeMake(400, 400)];
+        tableViewController.preferredContentSize = CGSizeMake(400, 400);
 		
 		resultsTable = tableViewController.tableView;
 		
@@ -166,6 +166,7 @@
 }
 
 - (BOOL)resignFirstResponder {
+    [super resignFirstResponder];
 	return [tokenField resignFirstResponder];
 }
 
