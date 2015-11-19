@@ -514,6 +514,9 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
             [self selectToken:tokens[0]];
         }
     }
+    UIFont *font = self.font;
+    [super setFont:nil];
+    [self setFont:font];
 }
 
 - (void)didEndEditing {
