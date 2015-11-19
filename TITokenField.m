@@ -419,7 +419,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 - (void)setup {
 	
 	[self setBorderStyle:UITextBorderStyleNone];
-	[self setFont:[UIFont systemFontOfSize:14]];
+	[self setFont:[UIFont fontWithName:@"HelveticaNeue" size:14]];
 	[self setBackgroundColor:[UIColor whiteColor]];
 	[self setAutocorrectionType:UITextAutocorrectionTypeNo];
 	[self setAutocapitalizationType:UITextAutocapitalizationTypeNone];
@@ -460,7 +460,9 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)setFont:(UIFont *)font {
-    font  = [UIFont fontWithName:@"HelveticaNeue" size:font.pointSize];
+    if(![font.familyName containsString:@"Helvetica Neue"]){
+        font  = [UIFont fontWithName:@"HelveticaNeue" size:font.pointSize];
+    }
 	[super setFont:font];
 	
 	if ([self.leftView isKindOfClass:[UILabel class]]){
