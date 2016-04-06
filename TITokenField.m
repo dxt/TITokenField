@@ -975,14 +975,17 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-	
-	[tokenField tokenizeText];
-	
 	if ([delegate respondsToSelector:@selector(textFieldShouldReturn:)]){
-		return [delegate textFieldShouldReturn:textField];
-	}
-	
-	return YES;
+        if([delegate textFieldShouldReturn:textField]){
+            [tokenField tokenizeText];
+            return YES;
+        }else{
+            return NO;
+        }
+    }else{
+        [tokenField tokenizeText];
+        return YES;
+    }
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
