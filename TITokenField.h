@@ -70,9 +70,7 @@
 	NSArray * sourceArray;
 	NSMutableArray * resultsArray;
 	
-	TITokenField * tokenField;
-	
-	UIPopoverController * popoverController;
+	TITokenField * tokenField;	
 }
 
 @property (nonatomic, assign) BOOL showAlreadyTokenized;

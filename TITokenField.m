@@ -19,7 +19,6 @@
 - (NSString *)searchResultStringForRepresentedObject:(id)object;
 - (void)setSearchResultsVisible:(BOOL)visible;
 - (void)resultsForSearchString:(NSString *)searchString;
-- (void)presentpopoverAtTokenFieldCaretAnimated:(BOOL)animated;
 @end
 
 @implementation TITokenFieldView
@@ -92,7 +91,6 @@
 		
 		resultsTable = tableViewController.tableView;
 		
-		popoverController = [[UIPopoverController alloc] initWithContentViewController:tableViewController];
 		[tableViewController release];
 	}
 	else
@@ -106,7 +104,6 @@
 		[self addSubview:resultsTable];
 		[resultsTable release];
 		
-		popoverController = nil;
 	}
 	
 	[self bringSubviewToFront:separator];
@@ -124,11 +121,6 @@
 	[resultsTable setFrame:((CGRect){resultsTable.frame.origin, {width, resultsTable.bounds.size.height}})];
 	[contentView setFrame:((CGRect){contentView.frame.origin, {width, (frame.size.height - CGRectGetMaxY(tokenField.frame))}})];
 	[tokenField setFrame:((CGRect){tokenField.frame.origin, {width, tokenField.bounds.size.height}})];
-	
-	if (popoverController.popoverVisible){
-		[popoverController dismissPopoverAnimated:NO];
-		[self presentpopoverAtTokenFieldCaretAnimated:NO];
-	}
 	
 	[self updateContentSize];
 	[self layoutSubviews];
@@ -282,9 +274,6 @@
 - (void)setSearchResultsVisible:(BOOL)visible {
 	
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-		
-		if (visible) [self presentpopoverAtTokenFieldCaretAnimated:YES];
-		else [popoverController dismissPopoverAnimated:YES];
 	}
 	else
 	{
@@ -339,14 +328,6 @@
 	[self setSearchResultsVisible:(resultsArray.count > 0)];
 }
 
-- (void)presentpopoverAtTokenFieldCaretAnimated:(BOOL)animated {
-	
-    UITextPosition * position = [tokenField positionFromPosition:tokenField.beginningOfDocument offset:2];
-	
-	[popoverController presentPopoverFromRect:[tokenField caretRectForPosition:position] inView:tokenField
-					 permittedArrowDirections:UIPopoverArrowDirectionUp animated:animated];
-}
-
 #pragma mark Other
 - (NSString *)description {
 	return [NSString stringWithFormat:@"<TITokenFieldView %p; Token count = %lu>", self, (unsigned long)self.tokenTitles.count];
@@ -356,7 +337,6 @@
 	[self setDelegate:nil];
 	[resultsArray release];
 	[sourceArray release];
-	[popoverController release];
 	[super dealloc];
 }
 
