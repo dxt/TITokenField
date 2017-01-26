@@ -497,6 +497,13 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
     UIFont *font = self.font;
     [super setFont:nil];
     [self setFont:font];
+    
+    if([self.leftView isKindOfClass:[UILabel class]]){
+        UILabel *label = (UILabel *)self.leftView;
+        font = label.font;
+        [label setFont:nil];
+        [label setFont:font];
+    }
 }
 
 - (void)didEndEditing {
