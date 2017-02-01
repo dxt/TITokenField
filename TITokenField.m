@@ -359,6 +359,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @property (nonatomic, readonly) UIScrollView * scrollView;
 @property (nonatomic) BOOL isEndingEditing;
 @property (nonatomic) CGFloat promptTextMaximumWidth;
+@property (nonatomic, retain) UIFont *savedFont;
 @end
 
 @interface TITokenField (Private)
@@ -444,6 +445,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
         font  = [UIFont fontWithName:@"HelveticaNeue" size:font.pointSize];
     }
 	[super setFont:font];
+    self.savedFont = font;
 	
 	if ([self.leftView isKindOfClass:[UILabel class]]){
 		[self setPromptText:((UILabel *)self.leftView).text];
@@ -494,15 +496,9 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
             [self selectToken:tokens[0]];
         }
     }
-    UIFont *font = self.font;
-    [super setFont:nil];
-    [self setFont:font];
-    
-    if([self.leftView isKindOfClass:[UILabel class]]){
-        UILabel *label = (UILabel *)self.leftView;
-        font = label.font;
-        [label setFont:nil];
-        [label setFont:font];
+    if(!!self.savedFont){
+        [super setFont:nil];
+        [self setFont:self.savedFont];
     }
 }
 
@@ -893,6 +889,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	[internalDelegate release];
 	[tokens release];
 	[tokenizingCharacters release];
+    [_savedFont release];
     [super dealloc];
 }
 
