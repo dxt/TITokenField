@@ -853,10 +853,6 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	return [self textRectForBounds:bounds];
 }
 
-- (CGRect)placeholderRectForBounds:(CGRect)bounds {
-	return [self textRectForBounds:bounds];
-}
-
 - (CGRect)leftViewRectForBounds:(CGRect)bounds {
 	return ((CGRect){{8, ceilf(self.font.lineHeight * 4 / 7)+1}, self.leftView.bounds.size});
 }
