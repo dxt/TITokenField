@@ -360,6 +360,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @property (nonatomic) BOOL isEndingEditing;
 @property (nonatomic) CGFloat promptTextMaximumWidth;
 @property (nonatomic, retain) UIFont *savedFont;
+@property (nonatomic, retain) UIFont *previousFont;
 @end
 
 @interface TITokenField (Private)
@@ -431,7 +432,8 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 - (void)setFrame:(CGRect)frame {
 	[super setFrame:frame];
 	[self.layer setShadowPath:[[UIBezierPath bezierPathWithRect:self.bounds] CGPath]];
-    if(self.font){
+    if(!!self.font && self.font != self.previousFont){
+        self.previousFont = self.font;
         [self layoutTokensAnimated:NO];
     }
 }
